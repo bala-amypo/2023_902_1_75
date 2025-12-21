@@ -9,36 +9,39 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "score_audit_logs")
+@Table(name = "risk_rules")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScoreAuditLog {
+public class RiskRule {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "visitor_id", nullable = false)
-    private Visitor visitor;
+    @Column(nullable = false, unique = true)
+    private String ruleName;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applied_rule_id", nullable = false)
-    private RiskRule appliedRule;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RuleType ruleType;
     
     @Column(nullable = false)
-    private Integer scoreChange;
+    private Integer threshold;
     
     @Column(nullable = false)
-    private String reason;
+    private Integer scoreImpact;
     
     @Column(nullable = false)
-    private LocalDateTime loggedAt;
+    private LocalDateTime createdAt;
     
     @PrePersist
     protected void onCreate() {
-        loggedAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
+    }
+    
+    public enum RuleType {
+        AFTER_HOURS, FREQUENT_VISITS, BLACKLIST, KEYWORD, CUSTOM
     }
 }
