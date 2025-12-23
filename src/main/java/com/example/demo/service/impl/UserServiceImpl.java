@@ -5,13 +5,12 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Set;
-
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // constructor injection (required)
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -28,15 +27,14 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .role(Set.of("ROLE_USER"))
-                .build();
+                .build();   // ✅ NO role()
 
         return userRepository.save(user);
     }
 
     @Override
     public String login(String email, String password) {
-        // No JWT, no DTO
+        // no JWT, no DTO
         return "dummy-token";
     }
 
