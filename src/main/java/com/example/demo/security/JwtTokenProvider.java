@@ -2,11 +2,12 @@ package com.example.demo.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+
 import java.util.Set;
 
 public class JwtTokenProvider {
 
-    public String createToken(Long userId, String email, Set<String> roles) {
+    public String createToken(Long id, String email, Set<String> roles) {
         return "token";
     }
 
