@@ -1,44 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@Table(name = "score_audit_logs")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class ScoreAuditLog {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue
     private Long id;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "visitor_id", nullable = false)
-    private Visitor visitor;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applied_rule_id", nullable = false)
-    private RiskRule appliedRule;
-    
-    @Column(nullable = false)
-    private Integer scoreChange;
-    
-    @Column(nullable = false)
+
     private String reason;
-    
-    @Column(nullable = false)
-    private LocalDateTime loggedAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        loggedAt = LocalDateTime.now();
-    }
+    private Integer scoreChange;
 }

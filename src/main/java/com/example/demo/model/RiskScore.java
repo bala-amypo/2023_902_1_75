@@ -1,40 +1,19 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
-@Table(name = "risk_scores")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class RiskScore {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue
     private Long id;
-    
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "visitor_id", nullable = false)
+
+    @OneToOne
     private Visitor visitor;
-    
-    @Column(nullable = false)
+
     private Integer totalScore;
-    
-    @Column(nullable = false)
     private String riskLevel;
-    
-    @Column(nullable = false)
-    private LocalDateTime evaluatedAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        evaluatedAt = LocalDateTime.now();
-    }
 }
