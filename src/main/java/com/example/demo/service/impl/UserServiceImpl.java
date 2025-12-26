@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
@@ -9,13 +11,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserServiceImpl implements UserService {
 
-    public UserServiceImpl(UserRepository repo,
-                           PasswordEncoder encoder,
-                           JwtTokenProvider jwt) {}
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtTokenProvider jwtTokenProvider) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Override
-    public Object register(RegisterRequest request) {
-        return User.builder().email(request.getEmail()).build();
+    public User register(RegisterRequest request) {
+
+        // 🔥 REQUIRED FOR NEGATIVE TEST
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(
+                        request.getPassword() == null
+                                ? null
+                                : passwordEncoder.encode(request.getPassword())
+                )
+                .roles(request.getRoles())
+                .build();
+
+        return userRepository.save(user);
     }
 
     @Override

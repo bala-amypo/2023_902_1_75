@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,16 @@ public class AuthController {
         this.service = service;
     }
 
-    public ResponseEntity<?> register(RegisterRequest req) {
-        return ResponseEntity.ok(service.register(req));
+    public ResponseEntity<?> register(RegisterRequest request) {
+        try {
+            return ResponseEntity.ok(service.register(request));
+        } catch (Exception e) {
+            // 🔥 REQUIRED: return 400 when email exists
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    public ResponseEntity<AuthResponse> login(AuthRequest req) {
-        return ResponseEntity.ok(service.login(req));
+    public ResponseEntity<AuthResponse> login(AuthRequest request) {
+        return ResponseEntity.ok(service.login(request));
     }
 }
