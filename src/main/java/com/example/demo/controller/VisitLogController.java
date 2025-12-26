@@ -4,36 +4,27 @@ import com.example.demo.model.VisitLog;
 import com.example.demo.service.VisitLogService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/visit-logs")
-@Tag(name = "Visit Logs", description = "Visit log management endpoints")
+@Tag(name = "VisitLog")
 public class VisitLogController {
 
-    private final VisitLogService visitLogService;
+    private final VisitLogService service;
 
-    public VisitLogController(VisitLogService visitLogService) {
-        this.visitLogService = visitLogService;
+    public VisitLogController(VisitLogService service) {
+        this.service = service;
     }
 
-    @PostMapping("/{visitorId}")
-    public ResponseEntity<VisitLog> createVisitLog(@PathVariable Long visitorId, @RequestBody VisitLog log) {
-        VisitLog created = visitLogService.createVisitLog(visitorId, log);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<VisitLog> create(long visitorId, VisitLog log) {
+        return ResponseEntity.ok(service.createVisitLog(visitorId, log));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VisitLog> getLog(@PathVariable Long id) {
-        VisitLog log = visitLogService.getLog(id);
-        return ResponseEntity.ok(log);
+    public ResponseEntity<VisitLog> get(long id) {
+        return ResponseEntity.ok(service.getLog(id));
     }
 
-    @GetMapping("/visitor/{visitorId}")
-    public ResponseEntity<List<VisitLog>> getLogsByVisitor(@PathVariable Long visitorId) {
-        List<VisitLog> logs = visitLogService.getLogsByVisitor(visitorId);
-        return ResponseEntity.ok(logs);
+    public ResponseEntity<List<VisitLog>> listByVisitor(long visitorId) {
+        return ResponseEntity.ok(service.getLogsByVisitor(visitorId));
     }
 }

@@ -4,36 +4,27 @@ import com.example.demo.model.Visitor;
 import com.example.demo.service.VisitorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/visitors")
-@Tag(name = "Visitors", description = "Visitor management endpoints")
+@Tag(name = "Visitor")
 public class VisitorController {
 
-    private final VisitorService visitorService;
+    private final VisitorService service;
 
-    public VisitorController(VisitorService visitorService) {
-        this.visitorService = visitorService;
+    public VisitorController(VisitorService service) {
+        this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<Visitor> createVisitor(@RequestBody Visitor visitor) {
-        Visitor created = visitorService.createVisitor(visitor);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<Visitor> create(Visitor v) {
+        return ResponseEntity.ok(service.createVisitor(v));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Visitor> getVisitor(@PathVariable Long id) {
-        Visitor visitor = visitorService.getVisitor(id);
-        return ResponseEntity.ok(visitor);
+    public ResponseEntity<Visitor> get(long id) {
+        return ResponseEntity.ok(service.getVisitor(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Visitor>> getAllVisitors() {
-        List<Visitor> visitors = visitorService.getAllVisitors();
-        return ResponseEntity.ok(visitors);
+    public ResponseEntity<List<Visitor>> all() {
+        return ResponseEntity.ok(service.getAllVisitors());
     }
 }

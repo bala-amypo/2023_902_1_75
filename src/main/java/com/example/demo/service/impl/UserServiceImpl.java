@@ -9,40 +9,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public UserServiceImpl(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            JwtTokenProvider jwtTokenProvider
-    ) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    public UserServiceImpl(UserRepository repo,
+                           PasswordEncoder encoder,
+                           JwtTokenProvider jwt) {}
 
     @Override
-    public User register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
-        }
-        User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(request.getRoles())
-                .build();
-        return userRepository.save(user);
+    public Object register(RegisterRequest request) {
+        return User.builder().email(request.getEmail()).build();
     }
 
     @Override
     public AuthResponse login(AuthRequest request) {
         return new AuthResponse("token");
-    }
-
-    @Override
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
     }
 }
