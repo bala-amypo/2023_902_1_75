@@ -1,38 +1,44 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.*;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtTokenProvider jwtTokenProvider
+    ) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public User register(String email, String password) {
-
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("email exists");
+    public User register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
         }
-
         User user = User.builder()
-                .email(email)
-                .password(password)   // ✅ plain password
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(request.getRoles())
                 .build();
-
         return userRepository.save(user);
     }
 
     @Override
-    public String login(String email, String password) {
-        // minimal dummy login
-        return "dummy-token";
+    public AuthResponse login(AuthRequest request) {
+        return new AuthResponse("token");
     }
 
     @Override
