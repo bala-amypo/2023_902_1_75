@@ -6,11 +6,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter @Builder
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VisitLog {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -21,8 +25,11 @@ public class VisitLog {
     private String purpose;
     private String location;
 
+    // 🔥 MUST BE PUBLIC (tests call it directly)
     @PrePersist
-    void prePersist() {
-        if (entryTime == null) entryTime = LocalDateTime.now();
+    public void prePersist() {
+        if (entryTime == null) {
+            entryTime = LocalDateTime.now();
+        }
     }
 }
