@@ -20,7 +20,7 @@ public class AuthController {
         try {
             return ResponseEntity.ok(service.register(request));
         } catch (Exception e) {
-            // 🔥 REQUIRED: return 400 when email exists
+            
             return ResponseEntity.badRequest().build();
         }
     }
